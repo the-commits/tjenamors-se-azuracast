@@ -1,7 +1,18 @@
 ---
+- name: reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
 - name: restart azuracast
+  ansible.builtin.systemd:
+    name: azuracast
+    state: restarted
+  when: ansible_service_mgr == 'systemd'
+
+- name: restart azuracast compose
   ansible.builtin.command: >-
-    docker compose -f {{ azuracast_base_dir }}/docker-compose.yml
+    /usr/bin/docker compose -f {{ azuracast_base_dir }}/docker-compose.yml
     --project-directory {{ azuracast_base_dir }} restart
   args:
     chdir: "{{ azuracast_base_dir }}"
+  when: ansible_service_mgr != 'systemd'

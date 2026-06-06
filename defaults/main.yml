@@ -50,3 +50,8 @@ azuracast_now_playing_max_concurrent_processes: 5
 
 # PHP-FPM
 azuracast_php_fpm_max_children: 5
+
+# Systemd service
+azuracast_shutdown_timeout: 60
+azuracast_service_enabled: true
+azuracast_service_state: started

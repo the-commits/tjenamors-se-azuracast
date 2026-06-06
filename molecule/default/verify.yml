@@ -31,3 +31,14 @@
         path: /var/azuracast/docker-compose.yml
       register: dc_check
       failed_when: not dc_check.stat.exists
+
+    - name: Check systemd service unit
+      ansible.builtin.stat:
+        path: /etc/systemd/system/azuracast.service
+      register: svc_check
+      failed_when: ansible_service_mgr == 'systemd' and not svc_check.stat.exists
+
+    - name: Verify service is enabled
+      ansible.builtin.command: systemctl is-enabled azuracast
+      changed_when: false
+      when: ansible_service_mgr == 'systemd'

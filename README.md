@@ -52,6 +52,9 @@ All variables are prefixed with `azuracast_`. See [`defaults/main.yml`](defaults
 | `azuracast_auto_assign_port_max` | `8499` | Maximum station port |
 | `azuracast_mysql_password` | `azur4c457` | MySQL password (change in production!) |
 | `azuracast_enable_redis` | `true` | Enable Redis cache |
+| `azuracast_service_enabled` | `true` | Start azuracast.service on boot |
+| `azuracast_service_state` | `started` | Desired service state |
+| `azuracast_shutdown_timeout` | `60` | Seconds to wait for graceful shutdown |
 
 ## Dependencies
 
@@ -103,10 +106,23 @@ molecule test
 
 1. Installs Docker and Docker Compose via the official `get.docker.com` script
 2. Creates the AzuraCast directory (`/var/azuracast` by default)
-3. Deployes `.env`, `azuracast.env`, and `docker-compose.yml` from Jinja2 templates
+3. Deploys `.env`, `azuracast.env`, and `docker-compose.yml` from Jinja2 templates
 4. Pulls the AzuraCast Docker images
-5. Starts the containers
-6. Runs `azuracast_install` on first deployment
+5. Deploys a systemd service (`azuracast.service`) on systemd-based distros and starts it with `systemctl enable --now`
+6. Falls back to direct `docker compose up -d` on non-systemd systems
+7. Runs `azuracast_install` on first deployment
+
+## Service Management (systemd)
+
+On systemd-based distros (Ubuntu, Debian, RHEL, etc.), manage AzuraCast like any other system service:
+
+```bash
+sudo systemctl status azuracast
+sudo systemctl start azuracast
+sudo systemctl stop azuracast
+sudo systemctl restart azuracast
+sudo journalctl -u azuracast
+```
 
 ## Contributing
 
