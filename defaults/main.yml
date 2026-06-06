@@ -57,6 +57,12 @@ azuracast_traefik_domain: radio.example.com
 azuracast_traefik_network: traefik
 azuracast_base_url: ""
 
+# Resource limits (Docker Compose deploy.resources)
+azuracast_memory_max: "2048m"
+azuracast_memory_reservation: "1024m"
+azuracast_cpus_max: "2"
+azuracast_cpus_reservation: "1"
+
 # Systemd service
 azuracast_shutdown_timeout: 60
 azuracast_service_enabled: true

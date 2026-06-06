@@ -4,9 +4,35 @@ Ansible role for deploying [AzuraCast](https://www.azuracast.com) via Docker on 
 
 ## Requirements
 
+### Server Requirements
+
+#### Minimum
+- 64-bit x86 (x86_64/amd64) or ARM64 CPU
+- at least 2 GB of RAM
+- 20 GB or greater of hard drive space
+- Docker Engine and Docker Compose installed
+
+#### Recommended
+- 4 CPU cores
+- 4 GB of RAM
+- 40 GB or greater of hard drive space
+- Docker Engine and Docker Compose installed
+
+Recommended specs allow running 5–10 stations with ease (hobby usage). If you
+wish to increase memory further, adding [swap space](https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-22-04/)
+should be the norm.
+
+#### Hard Limits
+- 5 CPU cores
+- 5 GB of RAM
+- 50 GB of hard drive space
+
+Hard limits are 1.25× recommended. Our setup runs 1 station with ~100 average
+listeners within recommended specs.
+
+### Ansible Requirements
 - Ansible 2.14+
 - Root/sudo access on target hosts
-- Linux (x86_64 or aarch64)
 
 ## Installation
 
@@ -50,6 +76,10 @@ All variables are prefixed with `azuracast_`. See [`defaults/main.yml`](defaults
 | `azuracast_pgid` | `1000` | Group ID for container processes |
 | `azuracast_auto_assign_port_min` | `8000` | Minimum station port |
 | `azuracast_auto_assign_port_max` | `8499` | Maximum station port |
+| `azuracast_memory_max` | `2048m` | Hard memory limit for web container |
+| `azuracast_memory_reservation` | `1024m` | Soft memory reservation |
+| `azuracast_cpus_max` | `2` | Hard CPU limit |
+| `azuracast_cpus_reservation` | `1` | Soft CPU reservation |
 | `azuracast_mysql_password` | `azur4c457` | MySQL password (change in production!) |
 | `azuracast_enable_redis` | `true` | Enable Redis cache |
 | `azuracast_service_enabled` | `true` | Start azuracast.service on boot |

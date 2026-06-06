@@ -41,6 +41,14 @@ services:
       - sftpgo_data:/var/azuracast/storage/sftpgo
       - acme:/var/azuracast/storage/acme
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: "{{ azuracast_memory_max }}"
+          cpus: "{{ azuracast_cpus_max }}"
+        reservations:
+          memory: "{{ azuracast_memory_reservation }}"
+          cpus: "{{ azuracast_cpus_reservation }}"
     ulimits:
       nofile:
         soft: 65536
