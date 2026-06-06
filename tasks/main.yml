@@ -38,12 +38,21 @@
             path: /tmp/get-docker.sh
             state: absent
 
-        - name: Add ansible user to docker group
-          ansible.builtin.user:
-            name: "{{ ansible_user }}"
-            groups: docker
-            append: true
-          when: ansible_user != 'root'
+- name: Ensure azuracast user is in docker group
+  ansible.builtin.user:
+    name: azuracast
+    groups: docker
+    append: true
+
+- name: Look up azuracast user UID and GID
+  ansible.builtin.getent:
+    database: passwd
+    key: azuracast
+
+- name: Set azuracast user facts
+  ansible.builtin.set_fact:
+    azuracast_user_uid: "{{ getent_passwd_azuracast.split(':')[1] }}"
+    azuracast_user_gid: "{{ getent_passwd_azuracast.split(':')[2] }}"
 
 - name: Build docker compose command
   ansible.builtin.set_fact:
@@ -55,33 +64,33 @@
   ansible.builtin.file:
     path: "{{ azuracast_base_dir }}"
     state: directory
-    owner: root
-    group: root
-    mode: "0755"
+    owner: "{{ azuracast_user_uid }}"
+    group: "{{ azuracast_user_gid }}"
+    mode: "0750"
 
 - name: Deploy .env file
   ansible.builtin.template:
     src: env.j2
     dest: "{{ azuracast_base_dir }}/.env"
-    owner: root
-    group: root
-    mode: "0644"
+    owner: "{{ azuracast_user_uid }}"
+    group: "{{ azuracast_user_gid }}"
+    mode: "0640"
 
 - name: Deploy azuracast.env file
   ansible.builtin.template:
     src: azuracast.env.j2
     dest: "{{ azuracast_base_dir }}/azuracast.env"
-    owner: root
-    group: root
-    mode: "0644"
+    owner: "{{ azuracast_user_uid }}"
+    group: "{{ azuracast_user_gid }}"
+    mode: "0640"
 
 - name: Deploy docker-compose.yml
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ azuracast_base_dir }}/docker-compose.yml"
-    owner: root
-    group: root
-    mode: "0644"
+    owner: "{{ azuracast_user_uid }}"
+    group: "{{ azuracast_user_gid }}"
+    mode: "0640"
 
 - name: Check if AzuraCast containers are already running
   ansible.builtin.command: >-
