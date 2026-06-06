@@ -51,8 +51,8 @@
 
 - name: Set azuracast user facts
   ansible.builtin.set_fact:
-    azuracast_user_uid: "{{ getent_passwd_azuracast.split(':')[1] }}"
-    azuracast_user_gid: "{{ getent_passwd_azuracast.split(':')[2] }}"
+    azuracast_user_uid: "{{ getent_passwd['azuracast'].split(':')[1] }}"
+    azuracast_user_gid: "{{ getent_passwd['azuracast'].split(':')[2] }}"
 
 - name: Build docker compose command
   ansible.builtin.set_fact:
