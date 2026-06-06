@@ -1,0 +1,17 @@
+namespace: tjenamors
+name: azuracast
+version: 0.1.0
+readme: README.md
+authors:
+  - the-commits
+description: Ansible role for deploying AzuraCast via Docker
+license:
+  - AGPL-3.0
+tags:
+  - azuracast
+  - radio
+  - streaming
+  - docker
+dependencies: {}
+repository: https://git.sr.ht/~the-commits/tjenamors-se-azuracast
+issues: https://git.sr.ht/~the-commits/tjenamors-se-azuracast

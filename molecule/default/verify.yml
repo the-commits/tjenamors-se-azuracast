@@ -1,0 +1,33 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Check Docker is installed
+      ansible.builtin.command: docker --version
+      changed_when: false
+
+    - name: Check AzuraCast base directory exists
+      ansible.builtin.stat:
+        path: /var/azuracast
+      register: dir_check
+      failed_when: not dir_check.stat.exists
+
+    - name: Check .env file exists
+      ansible.builtin.stat:
+        path: /var/azuracast/.env
+      register: env_check
+      failed_when: not env_check.stat.exists
+
+    - name: Check azuracast.env file exists
+      ansible.builtin.stat:
+        path: /var/azuracast/azuracast.env
+      register: acenv_check
+      failed_when: not acenv_check.stat.exists
+
+    - name: Check docker-compose.yml exists
+      ansible.builtin.stat:
+        path: /var/azuracast/docker-compose.yml
+      register: dc_check
+      failed_when: not dc_check.stat.exists

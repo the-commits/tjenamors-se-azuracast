@@ -1,0 +1,52 @@
+---
+azuracast_base_dir: /var/azuracast
+azuracast_release_channel: latest
+
+# Ports
+azuracast_http_port: 80
+azuracast_https_port: 443
+azuracast_sftp_port: 2022
+
+# User IDs for container
+azuracast_puid: 1000
+azuracast_pgid: 1000
+
+# NGINX
+azuracast_nginx_timeout: 1800
+
+# Application environment
+azuracast_application_env: production
+azuracast_composer_plugin_mode: false
+azuracast_auto_assign_port_min: 8000
+azuracast_auto_assign_port_max: 8499
+azuracast_show_detailed_errors: false
+
+# Database
+azuracast_mysql_host: localhost
+azuracast_mysql_port: 3306
+azuracast_mysql_user: azuracast
+azuracast_mysql_password: azur4c457
+azuracast_mysql_database: azuracast
+azuracast_mysql_random_root_password: true
+
+# Redis
+azuracast_enable_redis: true
+azuracast_redis_host: localhost
+azuracast_redis_port: 6379
+azuracast_redis_db: 1
+
+# PHP
+azuracast_php_max_file_size: 25M
+azuracast_php_memory_limit: 128M
+azuracast_php_max_execution_time: 30
+
+# Sync
+azuracast_sync_short_execution_time: 600
+azuracast_sync_long_execution_time: 1800
+
+# Now Playing
+azuracast_now_playing_delay_time: 0
+azuracast_now_playing_max_concurrent_processes: 5
+
+# PHP-FPM
+azuracast_php_fpm_max_children: 5
