@@ -5,39 +5,6 @@
     - "{{ ansible_os_family | lower }}.yml"
     - "default.yml"
 
-- name: Install prerequisites
-  ansible.builtin.package:
-    name: "{{ azuracast_prerequisites }}"
-    state: present
-    update_cache: true
-
-- name: Install Docker
-  block:
-    - name: Check if Docker is already installed
-      ansible.builtin.command: command -v docker
-      changed_when: false
-      failed_when: false
-      register: docker_check
-
-    - name: Run official Docker installer
-      when: docker_check.rc != 0
-      block:
-        - name: Download get.docker.com script
-          ansible.builtin.get_url:
-            url: https://get.docker.com
-            dest: /tmp/get-docker.sh
-            mode: "0700"
-
-        - name: Execute Docker installer
-          ansible.builtin.command: sh /tmp/get-docker.sh
-          args:
-            creates: /usr/bin/docker
-
-        - name: Remove installer script
-          ansible.builtin.file:
-            path: /tmp/get-docker.sh
-            state: absent
-
 - name: Ensure azuracast user is in docker group
   ansible.builtin.user:
     name: azuracast
