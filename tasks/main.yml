@@ -146,30 +146,27 @@
       ansible.builtin.set_fact:
         azuracast_started: true
 
-- name: Run initial AzuraCast setup
-  when: azuracast_started | default(false)
-  block:
-    - name: Check if AzuraCast is already initialized
-      ansible.builtin.stat:
-        path: "{{ azuracast_base_dir }}/.initialized"
-      register: initialized_check
+- name: Check if AzuraCast is already initialized
+  ansible.builtin.stat:
+    path: "{{ azuracast_base_dir }}/.initialized"
+  register: initialized_check
 
-    - name: Wait for web container to be ready
-      ansible.builtin.pause:
-        seconds: 30
-      when: not initialized_check.stat.exists
+- name: Wait for web container to be ready
+  ansible.builtin.pause:
+    seconds: 30
+  when: not initialized_check.stat.exists
 
-    - name: Execute azuracast_install inside web container
-      ansible.builtin.command: >-
-        {{ azuracast_compose_cmd }} run --rm web azuracast_install
-      args:
-        chdir: "{{ azuracast_base_dir }}"
-      register: install_result
-      changed_when: true
-      when: not initialized_check.stat.exists
+- name: Execute azuracast_install inside web container
+  ansible.builtin.command: >-
+    {{ azuracast_compose_cmd }} run --rm web azuracast_install
+  args:
+    chdir: "{{ azuracast_base_dir }}"
+  register: install_result
+  changed_when: true
+  when: not initialized_check.stat.exists
 
-    - name: Mark AzuraCast as initialized
-      ansible.builtin.file:
-        path: "{{ azuracast_base_dir }}/.initialized"
-        state: touch
-      when: not initialized_check.stat.exists
+- name: Mark AzuraCast as initialized
+  ansible.builtin.file:
+    path: "{{ azuracast_base_dir }}/.initialized"
+    state: touch
+  when: not initialized_check.stat.exists
