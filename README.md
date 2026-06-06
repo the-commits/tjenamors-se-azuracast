@@ -58,7 +58,9 @@ All variables are prefixed with `azuracast_`. See [`defaults/main.yml`](defaults
 
 ## Dependencies
 
-None. Docker is installed automatically by the role using the official `get.docker.com` script.
+Requires Docker Engine and Docker Compose to be installed on target hosts. See
+[`tjenamors-se-docker`](https://git.sr.ht/~the-commits/tjenamors-se-docker) and
+[`tjenamors-se-docker-compose`](https://git.sr.ht/~the-commits/tjenamors-se-docker-compose).
 
 ## Example Playbook
 
@@ -69,6 +71,8 @@ None. Docker is installed automatically by the role using the official `get.dock
     azuracast_http_port: 8080
     azuracast_release_channel: stable
   roles:
+    - role: docker
+    - role: docker_compose
     - role: azuracast
 ```
 
@@ -104,8 +108,7 @@ molecule test
 
 ## How It Works
 
-1. Installs Docker and Docker Compose via the official `get.docker.com` script
-2. Creates the AzuraCast directory (`/var/azuracast` by default)
+1. Creates the AzuraCast directory (`/var/azuracast` by default)
 3. Deploys `.env`, `azuracast.env`, and `docker-compose.yml` from Jinja2 templates
 4. Pulls the AzuraCast Docker images
 5. Deploys a systemd service (`azuracast.service`) on systemd-based distros and starts it with `systemctl enable --now`
