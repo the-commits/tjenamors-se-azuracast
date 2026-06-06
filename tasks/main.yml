@@ -68,6 +68,10 @@
   failed_when: false
   register: azuracast_ps
 
+- name: Determine if AzuraCast needs first-run setup
+  ansible.builtin.set_fact:
+    azuracast_needs_setup: "{{ azuracast_ps.stdout_lines | length == 0 }}"
+
 - name: Pull Docker images
   ansible.builtin.command: >-
     {{ azuracast_compose_cmd }} pull
@@ -75,12 +79,12 @@
     chdir: "{{ azuracast_base_dir }}"
   register: compose_pull
   changed_when: compose_pull.stdout_lines | length > 0
-  when: azuracast_ps.rc != 0
+  when: azuracast_needs_setup
 
 - name: Deploy systemd unit
   when:
     - ansible_facts['service_mgr'] == 'systemd'
-    - azuracast_ps.rc != 0
+    - azuracast_needs_setup
   block:
     - name: Deploy azuracast.service unit
       ansible.builtin.template:
@@ -99,7 +103,7 @@
 - name: Enable and start systemd service (one-time)
   when:
     - ansible_facts['service_mgr'] == 'systemd'
-    - azuracast_ps.rc != 0
+    - azuracast_needs_setup
   block:
     - name: Check if service is already enabled
       ansible.builtin.command: systemctl is-enabled azuracast
@@ -128,7 +132,7 @@
 - name: Start directly via docker compose (non-systemd)
   when:
     - ansible_facts['service_mgr'] != 'systemd'
-    - azuracast_ps.rc != 0
+    - azuracast_needs_setup
   block:
     - name: Start AzuraCast containers
       ansible.builtin.command: >-
