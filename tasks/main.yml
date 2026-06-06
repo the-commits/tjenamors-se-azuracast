@@ -155,9 +155,8 @@
       register: initialized_check
 
     - name: Wait for web container to be ready
-      ansible.builtin.wait_for:
-        timeout: 30
-      delegate_to: localhost
+      ansible.builtin.pause:
+        seconds: 30
       when: not initialized_check.stat.exists
 
     - name: Execute azuracast_install inside web container
