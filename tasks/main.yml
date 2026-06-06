@@ -101,7 +101,7 @@
   changed_when: compose_pull.stdout_lines | length > 0
   when: azuracast_ps.rc != 0
 
-- name: Deploy and start via systemd
+- name: Deploy systemd unit
   when:
     - ansible_service_mgr == 'systemd'
     - azuracast_ps.rc != 0
@@ -120,11 +120,30 @@
         daemon_reload: true
       when: systemd_unit.changed
 
-    - name: Enable and start AzuraCast service
-      ansible.builtin.systemd:
-        name: azuracast
-        enabled: "{{ azuracast_service_enabled }}"
-        state: "{{ azuracast_service_state }}"
+- name: Enable and start systemd service (one-time)
+  when:
+    - ansible_service_mgr == 'systemd'
+    - azuracast_ps.rc != 0
+  block:
+    - name: Check if service is already enabled
+      ansible.builtin.command: systemctl is-enabled azuracast
+      changed_when: false
+      failed_when: false
+      register: svc_enabled
+
+    - name: Enable service on first run
+      ansible.builtin.command: systemctl enable azuracast
+      when: svc_enabled.rc != 0
+
+    - name: Check if service is already active
+      ansible.builtin.command: systemctl is-active azuracast
+      changed_when: false
+      failed_when: false
+      register: svc_active
+
+    - name: Start service on first run
+      ansible.builtin.command: systemctl start azuracast
+      when: svc_active.rc != 0
 
     - name: Mark as started by systemd
       ansible.builtin.set_fact:
