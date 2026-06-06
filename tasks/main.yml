@@ -79,7 +79,7 @@
 
 - name: Deploy systemd unit
   when:
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts['service_mgr'] == 'systemd'
     - azuracast_ps.rc != 0
   block:
     - name: Deploy azuracast.service unit
@@ -98,7 +98,7 @@
 
 - name: Enable and start systemd service (one-time)
   when:
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts['service_mgr'] == 'systemd'
     - azuracast_ps.rc != 0
   block:
     - name: Check if service is already enabled
@@ -127,7 +127,7 @@
 
 - name: Start directly via docker compose (non-systemd)
   when:
-    - ansible_service_mgr != 'systemd'
+    - ansible_facts['service_mgr'] != 'systemd'
     - azuracast_ps.rc != 0
   block:
     - name: Start AzuraCast containers
