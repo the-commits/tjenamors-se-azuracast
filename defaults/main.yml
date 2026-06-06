@@ -51,6 +51,12 @@ azuracast_now_playing_max_concurrent_processes: 5
 # PHP-FPM
 azuracast_php_fpm_max_children: 5
 
+# Traefik integration
+azuracast_traefik_enabled: false
+azuracast_traefik_domain: radio.example.com
+azuracast_traefik_network: traefik
+azuracast_base_url: ""
+
 # Systemd service
 azuracast_shutdown_timeout: 60
 azuracast_service_enabled: true

@@ -10,9 +10,18 @@ services:
     image: "ghcr.io/azuracast/azuracast:${AZURACAST_VERSION:-latest}"
     labels:
       - "com.centurylinklabs.watchtower.scope=azuracast"
+{% if azuracast_traefik_enabled %}
+      - "traefik.enable=true"
+      - "traefik.http.routers.azuracast.rule=Host(`{{ azuracast_traefik_domain }}`)"
+      - "traefik.http.routers.azuracast.entrypoints=websecure"
+      - "traefik.http.routers.azuracast.tls=true"
+      - "traefik.http.routers.azuracast.tls.certResolver=letsencrypt"
+{% endif %}
     ports:
+{% if not azuracast_traefik_enabled %}
       - '${AZURACAST_HTTP_PORT:-80}:${AZURACAST_HTTP_PORT:-80}'
       - '${AZURACAST_HTTPS_PORT:-443}:${AZURACAST_HTTPS_PORT:-443}'
+{% endif %}
       - '${AZURACAST_SFTP_PORT:-2022}:${AZURACAST_SFTP_PORT:-2022}'
 {% for port in range(azuracast_auto_assign_port_min, azuracast_auto_assign_port_max + 1) %}
       - '{{ port }}:{{ port }}'
@@ -40,6 +49,11 @@ services:
       options:
         max-size: "1m"
         max-file: "5"
+{% if azuracast_traefik_enabled %}
+    networks:
+      - default
+      - {{ azuracast_traefik_network | default('traefik') }}
+{% endif %}
 
   updater:
     container_name: azuracast_updater
@@ -63,3 +77,9 @@ volumes:
   station_data: { }
   www_uploads: { }
   backups: { }
+
+{% if azuracast_traefik_enabled %}
+networks:
+  {{ azuracast_traefik_network | default('traefik') }}:
+    external: true
+{% endif %}
