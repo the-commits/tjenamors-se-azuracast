@@ -5,6 +5,31 @@
     - "{{ ansible_os_family | lower }}.yml"
     - "default.yml"
 
+- name: Check available disk space at AzuraCast base directory
+  ansible.builtin.command: df -B1 --output=avail "{{ azuracast_base_dir }}"
+  register: azuracast_df_check
+  changed_when: false
+  failed_when: false
+
+- name: Set disk space fact
+  ansible.builtin.set_fact:
+    azuracast_disk_space_gb: >-
+      {{ (azuracast_df_check.stdout_lines[-1] | int / 1073741824) | int }}
+  when: azuracast_df_check.rc == 0
+
+- name: Assert minimum hardware requirements
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['architecture'] in ['x86_64', 'aarch64']
+      - ansible_facts['memtotal_mb'] | int >= 2048
+      - (azuracast_disk_space_gb | default(0) | int) >= 20
+    fail_msg: >-
+      AzuraCast minimum requirements not met:
+      arch={{ ansible_facts['architecture'] }} (need x86_64 or aarch64),
+      RAM={{ ansible_facts['memtotal_mb'] }}MB (need 2048MB+),
+      disk={{ azuracast_disk_space_gb | default('?') }}GB (need 20GB+)
+    quiet: true
+
 - name: Ensure azuracast user is in docker group
   ansible.builtin.user:
     name: azuracast
