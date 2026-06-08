@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sourcehut Issue Tracker
+    url: https://todo.sr.ht/~the-commits/tjenamors-se-azuracast
+    about: Please report issues on sourcehut, not GitHub.
