@@ -1,3 +1,6 @@
+[![sourcehut](https://img.shields.io/badge/sourcehut-~the--commits/tjenamors--se--azuracast-2d6b9e?logo=sourcehut)](https://git.sr.ht/~the-commits/tjenamors-se-azuracast)
+[![GitHub mirror](https://img.shields.io/badge/GitHub-the--commits/tjenamors--se--azuracast-181717?logo=github)](https://github.com/the-commits/tjenamors-se-azuracast)
+
 # AzuraCast
 
 Ansible role for deploying [AzuraCast](https://www.azuracast.com) via Docker on Linux servers.
