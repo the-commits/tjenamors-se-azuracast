@@ -1,0 +1,10 @@
+---
+# Build the TRUSTED_PROXIES list for AzuraCast from Cloudflare IPs
+# passed by the parent playbook. Requires azuracast_cloudflare_ips_active
+# to be set before this role runs.
+
+- name: Build trusted proxies list (Traefik + Cloudflare)
+  ansible.builtin.set_fact:
+    azuracast_trusted_proxies: >-
+      {{ ['127.0.0.1/32', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']
+         + azuracast_cloudflare_ips_active }}

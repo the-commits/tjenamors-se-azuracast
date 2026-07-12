@@ -57,6 +57,27 @@ azuracast_traefik_domain: radio.example.com
 azuracast_traefik_network: traefik
 azuracast_base_url: ""
 
+# Cloudflare real IP forwarding
+# Enable to fetch Cloudflare IPv4 ranges and configure trusted proxies.
+azuracast_cloudflare_enabled: false
+azuracast_cloudflare_ips_fallback:
+  - 173.245.48.0/20
+  - 103.21.244.0/22
+  - 103.22.200.0/22
+  - 103.31.4.0/22
+  - 141.101.64.0/18
+  - 108.162.192.0/18
+  - 190.93.240.0/20
+  - 188.114.96.0/20
+  - 197.234.240.0/22
+  - 198.41.128.0/17
+  - 162.158.0.0/15
+  - 104.16.0.0/13
+  - 104.24.0.0/14
+  - 172.64.0.0/13
+  - 131.0.72.0/22
+azuracast_trusted_proxies: []
+
 # Resource limits (Docker Compose deploy.resources)
 azuracast_memory_max: "2048m"
 azuracast_memory_reservation: "1024m"
