@@ -212,6 +212,19 @@
         azuracast:/etc/nginx/azuracast.conf.d/cloudflare-real-ip.conf
       changed_when: cf_nginx_config.changed
 
+    - name: Render nginx.conf with Cloudflare settings
+      ansible.builtin.template:
+        src: nginx.conf.j2
+        dest: /tmp/azuracast-nginx.conf
+        mode: "0644"
+      register: cf_nginx_conf
+
+    - name: Copy patched nginx.conf into container
+      ansible.builtin.command: >-
+        docker cp /tmp/azuracast-nginx.conf
+        azuracast:/etc/nginx/nginx.conf
+      changed_when: cf_nginx_conf.changed
+
     - name: Test and reload nginx inside container
       ansible.builtin.command: docker exec azuracast nginx -s reload
-      changed_when: cf_nginx_config.changed
+      changed_when: cf_nginx_config.changed or cf_nginx_conf.changed
