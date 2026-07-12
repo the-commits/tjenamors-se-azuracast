@@ -199,13 +199,11 @@
 - name: Deploy Cloudflare real IP nginx config
   when: azuracast_cloudflare_enabled | default(false)
   block:
-    - name: Render Cloudflare nginx config to local temp file
+    - name: Render Cloudflare nginx config to temp file
       ansible.builtin.template:
         src: cloudflare-real-ip.conf.j2
         dest: /tmp/azuracast-cloudflare-real-ip.conf
         mode: "0644"
-      delegate_to: localhost
-      become: false
       register: cf_nginx_config
 
     - name: Copy Cloudflare nginx config into container
