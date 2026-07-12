@@ -195,3 +195,25 @@
     path: "{{ azuracast_base_dir }}/.initialized"
     state: touch
   when: not initialized_check.stat.exists
+
+- name: Deploy Cloudflare real IP nginx config
+  when: azuracast_cloudflare_enabled | default(false)
+  block:
+    - name: Render Cloudflare nginx config to local temp file
+      ansible.builtin.template:
+        src: cloudflare-real-ip.conf.j2
+        dest: /tmp/azuracast-cloudflare-real-ip.conf
+        mode: "0644"
+      delegate_to: localhost
+      become: false
+      register: cf_nginx_config
+
+    - name: Copy Cloudflare nginx config into container
+      ansible.builtin.command: >-
+        docker cp /tmp/azuracast-cloudflare-real-ip.conf
+        azuracast:/etc/nginx/azuracast.conf.d/cloudflare-real-ip.conf
+      changed_when: cf_nginx_config.changed
+
+    - name: Test and reload nginx inside container
+      ansible.builtin.command: docker exec azuracast nginx -s reload
+      changed_when: cf_nginx_config.changed
