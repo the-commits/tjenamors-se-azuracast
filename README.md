@@ -1,6 +1,12 @@
 [![sourcehut](https://img.shields.io/badge/sourcehut-~the--commits/tjenamors--se--azuracast-2d6b9e?logo=sourcehut)](https://git.sr.ht/~the-commits/tjenamors-se-azuracast)
 [![GitHub mirror](https://img.shields.io/badge/GitHub-the--commits/tjenamors--se--azuracast-181717?logo=github)](https://github.com/the-commits/tjenamors-se-azuracast)
 
+> **Do not open issues or pull requests on GitHub** — the mirror there is
+> [read-only](https://git.sr.ht/~the-commits/tjenamors-se-azuracast).
+> Please use the [sourcehut issue tracker](https://todo.sr.ht/~the-commits/tjenamors-se-azuracast)
+> and send patches to [~the-commits/tjenamors-se-azuracast@lists.sr.ht](mailto:~the-commits/tjenamors-se-azuracast@lists.sr.ht).
+
+
 # AzuraCast
 
 Ansible role for deploying [AzuraCast](https://www.azuracast.com) via Docker on Linux servers.
