@@ -84,6 +84,9 @@ azuracast_memory_reservation: "1024m"
 azuracast_cpus_max: "2"
 azuracast_cpus_reservation: "1"
 
+# Watchtower updater
+azuracast_updater_schedule: "0 0 4 * * *"
+
 # Systemd service
 azuracast_shutdown_timeout: 60
 azuracast_service_enabled: true

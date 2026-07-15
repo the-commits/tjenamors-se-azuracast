@@ -66,6 +66,9 @@ services:
   updater:
     container_name: azuracast_updater
     image: ghcr.io/azuracast/updater:latest
+    environment:
+      - WATCHTOWER_SCHEDULE={{ azuracast_updater_schedule }}
+      - WATCHTOWER_SCOPE=azuracast
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
